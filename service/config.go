@@ -31,13 +31,14 @@ cleanup_builds: true
 `
 
 var (
-	configFile = flag.String("config", "./config.yaml", "Default configuration file")
+	configFile    = flag.String("config", "./config.yaml", "Default configuration file")
+	currentConfig = Config{}
 )
 
 // LoadConfig reads the configuration file
 // from the default location or falls back
 // to the default config values
-func LoadConfig() Config {
+func LoadConfig() *Config {
 	var config Config
 
 	confErr := yaml.Unmarshal([]byte(DefaultConfig), &config)
@@ -46,5 +47,11 @@ func LoadConfig() Config {
 		log.Fatalf("Cannot unmarshal default config data! Error: %s", confErr)
 	}
 
-	return config
+	currentConfig = config
+
+	return &currentConfig
+}
+
+func GetConfig() *Config {
+	return &currentConfig
 }

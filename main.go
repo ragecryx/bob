@@ -10,38 +10,24 @@ import (
 	svc "github.com/ragecryx/bob/service"
 )
 
-func rootHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Serving: %s %s\n", r.Method, r.URL.Path)
-	fmt.Fprintf(w, "Loaded Recipes\n")
-
-	for k, _ := range svc.GetRecipes().All {
-		fmt.Fprintf(w, "* %s", k)
-	}
-
-	fmt.Printf("Served: %s\n", r.Host)
-}
-
 func main() {
+	fmt.Printf("«It's better to do one job well than two jobs... not so well.»\n - Bob\n\n")
+
+	// Load configuration and recipes files
 	flag.Parse()
 	config := svc.LoadConfig()
 	svc.LoadRecipes()
 
-	PORT := ":" + strconv.Itoa(config.Port)
-	args := os.Args
+	// Set endpoints
+	svc.SetupEndpoints()
 
-	if len(args) == 1 {
-		fmt.Println("* Using default port: ", PORT)
-	} else {
-		PORT = ":" + args[1]
-	}
-
-	http.HandleFunc(config.BasePath, rootHandler)
-
-	serveErr := http.ListenAndServe(PORT, nil)
+	// Startup the server
+	port := ":" + strconv.Itoa(config.Port)
+	fmt.Printf("* Listening on %s", port)
+	serveErr := http.ListenAndServe(port, nil)
 
 	if serveErr != nil {
 		fmt.Println(serveErr)
 		os.Exit(1)
 	}
-
 }
