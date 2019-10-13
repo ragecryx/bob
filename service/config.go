@@ -2,6 +2,8 @@ package service
 
 import (
 	"flag"
+	"fmt"
+	"io/ioutil"
 	"log"
 
 	"gopkg.in/yaml.v2"
@@ -36,15 +38,25 @@ var (
 )
 
 // LoadConfig reads the configuration file
-// from the default location or falls back
-// to the default config values
+// and stores the data in related struct
 func LoadConfig() *Config {
 	var config Config
+	var confErr error
 
-	confErr := yaml.Unmarshal([]byte(DefaultConfig), &config)
+	fmt.Printf("* Loading %s", *configFile)
+	data, fileErr := ioutil.ReadFile(*configFile)
+
+	if fileErr != nil {
+		fmt.Printf("... %s\n", fileErr)
+
+		fmt.Printf("* Falling back to server defaults...\n")
+		confErr = yaml.Unmarshal([]byte(DefaultConfig), &config)
+	} else {
+		confErr = yaml.Unmarshal(data, &config)
+	}
 
 	if confErr != nil {
-		log.Fatalf("Cannot unmarshal default config data! Error: %s", confErr)
+		log.Fatalf("Cannot unmarshal config data! Error: %s\n", confErr)
 	}
 
 	currentConfig = config
@@ -52,6 +64,8 @@ func LoadConfig() *Config {
 	return &currentConfig
 }
 
+// GetConfig provides te current
+// server configuration object
 func GetConfig() *Config {
 	return &currentConfig
 }

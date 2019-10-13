@@ -29,8 +29,10 @@ var (
 	loadedRecipes = Recipes{}
 )
 
-// LoadRecipes read the recipes file
-func LoadRecipes() {
+// LoadRecipes reads the recipes file
+// and stores the config in the related
+// data structure
+func LoadRecipes() *Recipes {
 	data, err := ioutil.ReadFile(*recipesFile)
 
 	if err != nil {
@@ -45,8 +47,12 @@ func LoadRecipes() {
 	}
 
 	loadedRecipes = recipes
+
+	return &loadedRecipes
 }
 
+// GetRecipes provides the current
+// recipes configuration object
 func GetRecipes() *Recipes {
 	return &loadedRecipes
 }
