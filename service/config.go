@@ -1,6 +1,7 @@
 package service
 
 import (
+	"flag"
 	"log"
 
 	"gopkg.in/yaml.v2"
@@ -28,6 +29,10 @@ builder_hostname: localhost
 task_queue_size: 10
 cleanup_builds: true
 `
+
+var (
+	configFile = flag.String("config", "./config.yaml", "Default configuration file")
+)
 
 // LoadConfig reads the configuration file
 // from the default location or falls back

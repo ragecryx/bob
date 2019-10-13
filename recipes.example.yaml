@@ -1,0 +1,11 @@
+#
+# Recipes example file
+#
+
+myapp-dev:
+  repository:
+    name: myapp
+    branch: dev
+    url: "git@bitbucket.org:stek.io/website.git"
+    vcs: git
+  command: "python ./bin/fabfile.py -f -s -a build"
