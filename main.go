@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
+
+	"github.com/ragecryx/bob/service"
 )
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
@@ -12,7 +15,9 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	PORT := ":9000"
+	config := service.LoadConfig()
+
+	PORT := ":" + strconv.Itoa(config.Port)
 	args := os.Args
 
 	if len(args) == 1 {
@@ -21,12 +26,12 @@ func main() {
 		PORT = ":" + args[1]
 	}
 
-	http.HandleFunc("/", rootHandler)
+	http.HandleFunc(config.BasePath, rootHandler)
 
-	err := http.ListenAndServe(PORT, nil)
+	serveErr := http.ListenAndServe(PORT, nil)
 
-	if err != nil {
-		fmt.Println(err)
+	if serveErr != nil {
+		fmt.Println(serveErr)
 		os.Exit(1)
 	}
 
