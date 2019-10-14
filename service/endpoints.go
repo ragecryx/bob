@@ -8,17 +8,6 @@ import (
 	"github.com/yosssi/ace"
 )
 
-// func rootHandler(w http.ResponseWriter, r *http.Request) {
-// 	fmt.Fprintf(w, "Serving: %s %s\n", r.Method, r.URL.Path)
-// 	fmt.Fprintf(w, "Loaded Recipes\n")
-
-// 	for k := range GetRecipes().All {
-// 		fmt.Fprintf(w, "* %s", k)
-// 	}
-
-// 	fmt.Printf("Served: %s\n", r.Host)
-// }
-
 func uiMain(w http.ResponseWriter, r *http.Request) {
 	tpl, err := ace.Load("templates/base", "templates/admin", nil)
 
@@ -37,20 +26,21 @@ func runRecipe(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	recipeName := vars["recipe_name"]
 
-	if val, ok := GetRecipes().All[recipeName]; ok {
+	if val, ok := loadedRecipes.All[recipeName]; ok {
 		fmt.Fprintf(w, "Will build %s", val)
 	} else {
 		fmt.Fprintf(w, "Recipe not found!")
 	}
 }
 
+// SetupEndpoints creates a router, registers
+// both API and UI Panel endpoints and attaches
+// the router to the global http request handler
 func SetupEndpoints() {
-	config := GetConfig()
-
 	router := mux.NewRouter()
 
 	router.HandleFunc("/", uiMain)
-	router.HandleFunc(config.BasePath+"/{recipe_name}", runRecipe)
+	router.HandleFunc(currentConfig.BasePath+"/{recipe_name}", runRecipe)
 
 	http.Handle("/", router)
 }
