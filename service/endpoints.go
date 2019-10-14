@@ -37,7 +37,11 @@ func runRecipe(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	recipeName := vars["recipe_name"]
 
-	fmt.Fprintf(w, "Will build %s", recipeName)
+	if val, ok := GetRecipes().All[recipeName]; ok {
+		fmt.Fprintf(w, "Will build %s", val)
+	} else {
+		fmt.Fprintf(w, "Recipe not found!")
+	}
 }
 
 func SetupEndpoints() {
