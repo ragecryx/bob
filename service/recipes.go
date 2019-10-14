@@ -5,41 +5,26 @@ import (
 	"io/ioutil"
 	"log"
 
+	types "github.com/ragecryx/bob/common"
 	"gopkg.in/yaml.v2"
 )
 
-type Repository struct {
-	Name   string `yaml:"name"`
-	Branch string `yaml:"branch"`
-	URL    string `yaml:"url"`
-	VCS    string `yaml:"vcs"`
-}
-
-type Recipe struct {
-	Repository Repository `yaml:"repository"`
-	Command    string     `yaml:"command"`
-}
-
-type Recipes struct {
-	All map[string]Recipe `yaml:",inline"`
-}
-
 var (
 	recipesFile   = flag.String("recipes", "./recipes.yaml", "Default recipes file")
-	loadedRecipes = Recipes{}
+	loadedRecipes = types.Recipes{}
 )
 
 // LoadRecipes reads the recipes file
 // and stores the config in the related
 // data structure
-func LoadRecipes() *Recipes {
+func LoadRecipes() *types.Recipes {
 	data, err := ioutil.ReadFile(*recipesFile)
 
 	if err != nil {
 		log.Fatalf("Cannot read recipes file %s Error: %s", *recipesFile, err)
 	}
 
-	var recipes Recipes
+	var recipes types.Recipes
 	yamlErr := yaml.Unmarshal(data, &recipes)
 
 	if yamlErr != nil {
@@ -53,6 +38,6 @@ func LoadRecipes() *Recipes {
 
 // GetRecipes provides the current
 // recipes configuration object
-func GetRecipes() *Recipes {
+func GetRecipes() *types.Recipes {
 	return &loadedRecipes
 }

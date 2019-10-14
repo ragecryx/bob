@@ -6,16 +6,9 @@ import (
 	"io/ioutil"
 	"log"
 
+	types "github.com/ragecryx/bob/common"
 	"gopkg.in/yaml.v2"
 )
-
-// The Config stores the current server configuration.
-// There are default values for each property but it's meant
-// to be customized through a YAML file.
-type Config struct {
-	Port     int    `yaml:"port"`      // The port the service will use
-	BasePath string `yaml:"base_path"` // The base path for the hooks
-}
 
 // DefaultConfig contains the default server configuration
 // in YAML format.
@@ -34,13 +27,13 @@ cleanup_builds: true
 
 var (
 	configFile    = flag.String("config", "./config.yaml", "Default configuration file")
-	currentConfig = Config{}
+	currentConfig = types.Config{}
 )
 
 // LoadConfig reads the configuration file
 // and stores the data in related struct
-func LoadConfig() *Config {
-	var config Config
+func LoadConfig() *types.Config {
+	var config types.Config
 	var confErr error
 
 	fmt.Printf("* Loading %s", *configFile)
@@ -66,6 +59,6 @@ func LoadConfig() *Config {
 
 // GetConfig provides te current
 // server configuration object
-func GetConfig() *Config {
+func GetConfig() *types.Config {
 	return &currentConfig
 }

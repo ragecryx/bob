@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	builder "github.com/ragecryx/bob/builder"
 	"github.com/yosssi/ace"
 )
 
@@ -28,6 +29,7 @@ func runRecipe(w http.ResponseWriter, r *http.Request) {
 
 	if val, ok := loadedRecipes.All[recipeName]; ok {
 		fmt.Fprintf(w, "Will build %s", val)
+		builder.QueueRecipe(val)
 	} else {
 		fmt.Fprintf(w, "Recipe not found!")
 	}

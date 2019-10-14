@@ -16,7 +16,7 @@ func StartServer() {
 	SetupEndpoints()
 
 	port := ":" + strconv.Itoa(currentConfig.Port)
-	fmt.Printf("* Listening on %s", port)
+	fmt.Printf("* Listening on %s\n", port)
 	serveErr := http.ListenAndServe(port, nil)
 
 	if serveErr != nil {
