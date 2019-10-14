@@ -2,7 +2,6 @@ package service
 
 import (
 	"flag"
-	"fmt"
 	"io/ioutil"
 	"log"
 
@@ -36,20 +35,20 @@ func LoadConfig() *types.Config {
 	var config types.Config
 	var confErr error
 
-	fmt.Printf("* Loading %s", *configFile)
+	log.Printf("* Loading %s", *configFile)
 	data, fileErr := ioutil.ReadFile(*configFile)
 
 	if fileErr != nil {
-		fmt.Printf("... %s\n", fileErr)
+		log.Printf("! Error: %s\n", fileErr)
 
-		fmt.Printf("* Falling back to server defaults...\n")
+		log.Printf("* Falling back to server defaults...\n")
 		confErr = yaml.Unmarshal([]byte(DefaultConfig), &config)
 	} else {
 		confErr = yaml.Unmarshal(data, &config)
 	}
 
 	if confErr != nil {
-		log.Fatalf("Cannot unmarshal config data! Error: %s\n", confErr)
+		log.Panicf("Cannot unmarshal config data! Error: %s\n", confErr)
 	}
 
 	currentConfig = config
