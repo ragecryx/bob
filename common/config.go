@@ -1,11 +1,10 @@
-package service
+package common
 
 import (
 	"flag"
 	"io/ioutil"
 	"log"
 
-	types "github.com/ragecryx/bob/common"
 	"gopkg.in/yaml.v2"
 )
 
@@ -26,13 +25,13 @@ cleanup_builds: true
 
 var (
 	configFile    = flag.String("config", "./config.yaml", "Default configuration file")
-	currentConfig = types.Config{}
+	currentConfig = Config{}
 )
 
 // LoadConfig reads the configuration file
 // and stores the data in related struct
-func LoadConfig() *types.Config {
-	var config types.Config
+func LoadConfig() *Config {
+	var config Config
 	var confErr error
 
 	log.Printf("* Loading %s", *configFile)
@@ -58,6 +57,6 @@ func LoadConfig() *types.Config {
 
 // GetConfig provides te current
 // server configuration object
-func GetConfig() *types.Config {
+func GetConfig() *Config {
 	return &currentConfig
 }

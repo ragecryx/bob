@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	builder "github.com/ragecryx/bob/builder"
+	common "github.com/ragecryx/bob/common"
 )
 
 // StartServer loads all required configurations
@@ -16,11 +17,11 @@ func StartServer() {
 
 	builder.ConfigureTasks(5)
 
-	LoadConfig()
-	LoadRecipes()
+	common.LoadConfig()
+	common.LoadRecipes()
 	SetupEndpoints()
 
-	port := ":" + strconv.Itoa(currentConfig.Port)
+	port := ":" + strconv.Itoa(common.GetConfig().Port)
 	log.Printf("* Listening on %s\n", port)
 	serveErr := http.ListenAndServe(port, nil)
 

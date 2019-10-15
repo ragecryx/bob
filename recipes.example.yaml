@@ -2,10 +2,10 @@
 # Recipes example file
 #
 
-myapp-dev:
+wayfarer-dev:
   repository:
-    name: myapp
+    name: wayfarer
     branch: dev
-    url: "git@bitbucket.org:stek.io/website.git"
+    url: "git@github.com:dimgrav/wayfarer.git"
     vcs: git
-  command: "python ./bin/fabfile.py -f -s -a build"
+  command: "echo FOO BAR BAZ"

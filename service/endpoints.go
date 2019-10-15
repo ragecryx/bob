@@ -5,8 +5,10 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	builder "github.com/ragecryx/bob/builder"
 	"github.com/yosssi/ace"
+
+	builder "github.com/ragecryx/bob/builder"
+	common "github.com/ragecryx/bob/common"
 )
 
 func uiMain(w http.ResponseWriter, r *http.Request) {
@@ -27,7 +29,7 @@ func runRecipe(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	recipeName := vars["recipe_name"]
 
-	if val, ok := loadedRecipes.All[recipeName]; ok {
+	if val, ok := common.GetRecipes().All[recipeName]; ok {
 		fmt.Fprintf(w, "Will build %s", val)
 		builder.QueueRecipe(val)
 	} else {
@@ -42,7 +44,7 @@ func SetupEndpoints() {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/", uiMain)
-	router.HandleFunc(currentConfig.BasePath+"/{recipe_name}", runRecipe)
+	router.HandleFunc(common.GetConfig().BasePath+"/{recipe_name}", runRecipe)
 
 	http.Handle("/", router)
 }

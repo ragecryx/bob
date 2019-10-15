@@ -1,24 +1,23 @@
-package service
+package common
 
 import (
 	"flag"
 	"io/ioutil"
 	"log"
 
-	types "github.com/ragecryx/bob/common"
 	"gopkg.in/yaml.v2"
 )
 
 var (
 	recipesFile   *string
 	recipesFlag   = flag.String("recipes", "./recipes.yaml", "Default recipes file")
-	loadedRecipes = types.Recipes{}
+	loadedRecipes = Recipes{}
 )
 
 // LoadRecipes reads the recipes file
 // and stores the config in the related
 // data structure
-func LoadRecipes() *types.Recipes {
+func LoadRecipes() *Recipes {
 	// If recipes file is defined in config
 	if len(*recipesFlag) > 0 {
 		recipesFile = recipesFlag
@@ -32,7 +31,7 @@ func LoadRecipes() *types.Recipes {
 		log.Fatalf("Cannot read recipes file %s Error: %s", *recipesFile, err)
 	}
 
-	var recipes types.Recipes
+	var recipes Recipes
 	yamlErr := yaml.Unmarshal(data, &recipes)
 
 	if yamlErr != nil {
@@ -46,6 +45,6 @@ func LoadRecipes() *types.Recipes {
 
 // GetRecipes provides the current
 // recipes configuration object
-func GetRecipes() *types.Recipes {
+func GetRecipes() *Recipes {
 	return &loadedRecipes
 }

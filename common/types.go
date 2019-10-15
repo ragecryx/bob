@@ -1,4 +1,4 @@
-package types
+package common
 
 // The Config stores the current server configuration.
 // There are default values for each property but it's meant
