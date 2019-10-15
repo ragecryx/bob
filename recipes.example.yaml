@@ -6,6 +6,6 @@ wayfarer-dev:
   repository:
     name: wayfarer
     branch: dev
-    url: "git@github.com:dimgrav/wayfarer.git"
+    url: "https://github.com/dimgrav/wayfarer.git"
     vcs: git
   command: "echo FOO BAR BAZ"
