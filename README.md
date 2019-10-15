@@ -1,6 +1,9 @@
 # bob
 A minimalistic CI/CD webhook service in Go. Fully compatible with [WebHawk](https://github.com/dbalaouras/webhawk)'s config and recipes.
 
+<p align="center">
+  <img height="250" src="https://raw.githubusercontent.com/ragecryx/bob/dev/assets/bob.png?raw=true" alt="Bob"/>
+</p>
 
 ## F.A.Q
 
