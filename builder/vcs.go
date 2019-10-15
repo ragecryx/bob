@@ -2,6 +2,7 @@ package builder
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"os"
 	"path"
@@ -31,12 +32,13 @@ func Clone(recipe *common.Recipe) (string, error) {
 	log.Printf("* Checking out %s in %s", title, finalDir)
 
 	if recipe.Repository.VCS == "git" {
-
 		// Clone
+		refBranch := fmt.Sprintf("refs/heads/%s", recipe.Repository.Branch)
+
 		_, err := git.PlainClone(finalDir, false, &git.CloneOptions{
 			URL:           recipe.Repository.URL,
 			Progress:      os.Stdout,
-			ReferenceName: plumbing.ReferenceName(recipe.Repository.Branch),
+			ReferenceName: plumbing.ReferenceName(refBranch),
 			SingleBranch:  true,
 		})
 
