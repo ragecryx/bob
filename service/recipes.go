@@ -10,7 +10,8 @@ import (
 )
 
 var (
-	recipesFile   = flag.String("recipes", "./recipes.yaml", "Default recipes file")
+	recipesFile   *string
+	recipesFlag   = flag.String("recipes", "./recipes.yaml", "Default recipes file")
 	loadedRecipes = types.Recipes{}
 )
 
@@ -18,6 +19,13 @@ var (
 // and stores the config in the related
 // data structure
 func LoadRecipes() *types.Recipes {
+	// If recipes file is defined in config
+	if len(*recipesFlag) > 0 {
+		recipesFile = recipesFlag
+	} else {
+		*recipesFile = currentConfig.RecipesFilePath
+	}
+
 	data, err := ioutil.ReadFile(*recipesFile)
 
 	if err != nil {
