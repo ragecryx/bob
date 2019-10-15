@@ -15,11 +15,11 @@ import (
 func StartServer() {
 	flag.Parse()
 
-	builder.ConfigureTasks(5)
-
-	common.LoadConfig()
+	config := common.LoadConfig()
 	common.LoadRecipes()
 	SetupEndpoints()
+
+	builder.ConfigureTasks(config.TaskQueueSize)
 
 	port := ":" + strconv.Itoa(common.GetConfig().Port)
 	log.Printf("* Listening on %s\n", port)

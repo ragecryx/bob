@@ -2,6 +2,7 @@ package builder
 
 import (
 	"log"
+	"os"
 
 	common "github.com/ragecryx/bob/common"
 )
@@ -11,7 +12,9 @@ var (
 	taskChannels     []chan common.Recipe
 )
 
-func ConfigureTasks(amount uint) {
+func ConfigureTasks(amount int) {
+	log.Printf("* Initializing %d tasks", amount)
+
 	taskAvailability = make([]bool, amount)
 	taskChannels = make([]chan common.Recipe, amount)
 
@@ -24,15 +27,26 @@ func ConfigureTasks(amount uint) {
 }
 
 func RunTask(index int) {
-	// config := common.GetConfig()
+	config := common.GetConfig()
+
 	for {
 		recipe := <-taskChannels[index]
 		taskAvailability[index] = false
+		title := recipe.Repository.Name
 
 		// Do Build
-		log.Printf("[T#%d] Building '%s'", index, recipe.Repository.URL)
-		Clone(&recipe)
-		log.Printf("[T#%d] Finished", index)
+		log.Printf("[T#%d] Building '%s'", index, title)
+		cloneDir, err := Clone(&recipe)
+
+		if err != nil && config.CleanupBuilds {
+			errCleanup := os.Remove(cloneDir)
+
+			if errCleanup != nil {
+				log.Panicf("! Could not cleanup %s after failed cloning", cloneDir)
+			}
+		}
+
+		log.Printf("[T#%d] Finished '%s'", index, title)
 
 		taskAvailability[index] = true
 	}
