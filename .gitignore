@@ -12,4 +12,7 @@
 *.out
 
 # Bob-specific
+[Bb]ob
+bob_builder
+bob_builder_unix
 workspace/
