@@ -2,10 +2,18 @@
 # Recipes example file
 #
 
+bob-dev:
+  repository:
+    name: bob
+    branch: dev
+    url: "https://github.com/ragecryx/bob.git"
+    vcs: git
+  command: "make"
+
 wayfarer-dev:
   repository:
     name: wayfarer
     branch: dev
     url: "https://github.com/dimgrav/wayfarer.git"
     vcs: git
-  command: "echo FOO BAR BAZ"
+  command: "npm install"

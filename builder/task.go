@@ -62,6 +62,7 @@ func RunTask(index int) {
 			}
 		}
 
+		// TODO: Support running multiple commands
 		// Build
 		args := strings.Fields(recipe.Command)
 		cmd := exec.Command(args[0], args[1:]...)
@@ -70,6 +71,7 @@ func RunTask(index int) {
 
 		if errCmd != nil && config.CleanupBuilds {
 			log.Printf("[T#%d] ! Error running build cmd: %s", index, recipe.Command)
+			log.Printf(" > ! Error: %s", errCmd.Error())
 			errCleanup := os.Remove(cloneDir)
 
 			if errCleanup != nil {
