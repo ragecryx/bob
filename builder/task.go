@@ -69,7 +69,7 @@ func RunTask(index int) {
 	}
 }
 
-func QueueRecipe(recipe common.Recipe) bool {
+func RunRecipe(recipe common.Recipe) bool {
 	// Find the first available task
 	// to run the recipe
 	for i := range taskAvailability {
