@@ -3,6 +3,8 @@ package builder
 import (
 	"log"
 	"os"
+	"os/exec"
+	"strings"
 
 	common "github.com/ragecryx/bob/common"
 )
@@ -34,7 +36,7 @@ func RunTask(index int) {
 		taskAvailability[index] = false
 		title := recipe.Repository.Name
 
-		// Do Build
+		// Clone
 		log.Printf("[T#%d] Building '%s'", index, title)
 		cloneDir, err := Clone(&recipe)
 
@@ -46,7 +48,22 @@ func RunTask(index int) {
 			}
 		}
 
-		log.Printf("[T#%d] Finished '%s'", index, title)
+		// Build
+		args := strings.Fields(recipe.Command)
+		cmd := exec.Command(args[0], args[1:]...)
+		cmd.Dir = cloneDir
+		result, errCmd := cmd.Output()
+
+		if errCmd != nil && config.CleanupBuilds {
+			log.Printf("[T#%d] ! Error running build cmd: %s", index, recipe.Command)
+			errCleanup := os.Remove(cloneDir)
+
+			if errCleanup != nil {
+				log.Panicf("! Could not cleanup %s after failed building", cloneDir)
+			}
+		}
+
+		log.Printf("[T#%d] Finished '%s' with output:\n > %s", index, title, string(result))
 
 		taskAvailability[index] = true
 	}
