@@ -20,8 +20,11 @@ Because I can and because I wanted to get more familiar with Go. Worry not, I'll
 * Make sure you have [latest Go installed and configured](https://golang.org/doc/install)
 * Clone the project in your workspace directory (what `$GOPATH` points at)
 * `cd` in the project directory
-* `go get ./...` to fetch all dependencies
-* Use either `go build` or `go run` to build the server binary
+* ~~`go get ./...` to fetch all dependencies~~
+* ~~Use either `go build` or `go run` to build the server binary~~
+* We have a `Makefile` now!
+* Use `make deps` to get all dependencies.
+* Use `make` to build the executable (named `bob_builder`)
 
 ## License
 This is under [MIT License](https://en.wikipedia.org/wiki/MIT_License). Check the `LICENSE` file in the project root directory for more info.
