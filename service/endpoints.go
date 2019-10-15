@@ -31,13 +31,7 @@ func runRecipe(w http.ResponseWriter, r *http.Request) {
 
 	if val, ok := common.GetRecipes().All[recipeName]; ok {
 		fmt.Fprintf(w, "Will build %s", val)
-		queued := builder.RunRecipe(val)
-
-		if queued {
-			fmt.Fprintf(w, " ...running!")
-		} else {
-			fmt.Fprintf(w, " ...all workers are busy, try again in a while!")
-		}
+		builder.Enqueue(val)
 	} else {
 		fmt.Fprintf(w, "Recipe not found!")
 	}
