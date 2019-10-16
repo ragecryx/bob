@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -30,8 +31,17 @@ func runRecipe(w http.ResponseWriter, r *http.Request) {
 	recipeName := vars["recipe_name"]
 
 	if val, ok := common.GetRecipes().All[recipeName]; ok {
-		fmt.Fprintf(w, "Will build %s", val)
-		builder.Enqueue(val)
+		// Parse Github payload
+		body, bodyErr := ioutil.ReadAll(r.Body)
+		if bodyErr != nil {
+			fmt.Fprintf(w, "Failed to parse body. Error: %s", bodyErr)
+			return
+		}
+
+		if builder.IsGithubMerge(val, body) {
+			fmt.Fprintf(w, "Will build %s", val)
+			builder.Enqueue(val)
+		}
 	} else {
 		fmt.Fprintf(w, "Recipe not found!")
 	}
