@@ -25,7 +25,7 @@ export BUILD_BRANCH=$(git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 
 export BUILD_COMMIT=$(git rev-parse HEAD 2> /dev/null | sed "s/\(.*\)/\1/")
 export BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
-UpdateStatus $BUILD_COMMIT "pending"
+UpdateStatus $BUILD_COMMIT pending
 
 make build-linux
 test_result=$?
