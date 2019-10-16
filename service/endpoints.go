@@ -12,7 +12,7 @@ import (
 )
 
 func uiMain(w http.ResponseWriter, r *http.Request) {
-	tpl, err := ace.Load("templates/base", "templates/admin", nil)
+	tpl, err := ace.Load("web/base", "web/admin", nil)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
