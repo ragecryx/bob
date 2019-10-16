@@ -7,7 +7,7 @@ REPO_NAME=bob
 TOKEN=$GITHUB_STATUS_TOKEN
 
 UpdateStatus () {
-    curl -d "{\"state\": \"$2\"}" -H "Authorization: token $TOKEN" -H "Content-Type: application/json" -X POST $API_ENDPOINT/repos/$REPO_OWNER/$REPO_NAME/statuses/$1
+    curl --silent --output /dev/null -d "{\"state\": \"$2\", \"context\": \"continuous-integration/bob\"}" -H "Authorization: token $TOKEN" -H "Content-Type: application/json" -X POST $API_ENDPOINT/repos/$REPO_OWNER/$REPO_NAME/statuses/$1
 }
 
 # Resolve current & script path
