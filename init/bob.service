@@ -1,0 +1,13 @@
+[Unit]
+Description=Bob Builder Service
+After=network.target
+
+[Service]
+Type=simple
+User=THE_USER_SERVICE_IS_RUN_AS
+WorkingDirectory=/PATH/TO/BIN/DIR/
+ExecStart=/PATH/TO/bob_builder -config=/PATH/TO/config.yaml
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
