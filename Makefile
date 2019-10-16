@@ -8,7 +8,6 @@ GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
 GOGET=$(GOCMD) get
 BINARY_NAME=bob_builder
-BINARY_UNIX=$(BINARY_NAME)_unix
 
 all: test build
 build: 
@@ -30,7 +29,12 @@ deps:
 
 
 # Cross compilation
+build-windows:
+		CGO_ENABLED=0 GOOS=windows GOARCH=amd64 $(GOBUILD) -o $(BINARY_NAME)_win_amd64
 build-linux:
-		CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GOBUILD) -o $(BINARY_UNIX) -v
+		CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GOBUILD) -o $(BINARY_NAME)_linux_amd64
+build-osx:
+		CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 $(GOBUILD) -o $(BINARY_NAME)_osx_amd64
+
 docker-build:
 		docker run --rm -it -v "$(GOPATH)":/go -w /go/src/$(PACKAGE) golang:latest go build -o "$(BINARY_UNIX)" -v
