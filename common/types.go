@@ -1,5 +1,10 @@
 package common
 
+import (
+	"fmt"
+	"regexp"
+)
+
 // The Config stores the current server configuration.
 // There are default values for each property but it's meant
 // to be customized through a YAML file.
@@ -28,6 +33,13 @@ type Repository struct {
 type Recipe struct {
 	Repository Repository `yaml:"repository"`
 	Command    string     `yaml:"command"`
+}
+
+// IsHostedIn checks if the repo resides (hosted)
+// on a specific git service by checking the URL.
+func (r Recipe) IsHostedIn(title string) bool {
+	matched, _ := regexp.Match(fmt.Sprintf(".*%s\\..*", title), []byte(r.Repository.URL))
+	return matched
 }
 
 // Recipes is the container struct for all the

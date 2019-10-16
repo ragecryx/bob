@@ -26,6 +26,7 @@ deps:
 		$(GOGET) gopkg.in/src-d/go-git.v4
 		$(GOGET) github.com/gorilla/mux
 		$(GOGET) github.com/yosssi/ace
+		$(GOGET) github.com/stretchr/testify/assert
 
 
 # Cross compilation
