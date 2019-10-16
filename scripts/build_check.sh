@@ -7,7 +7,7 @@ REPO_NAME=bob
 TOKEN=$GITHUB_STATUS_TOKEN
 
 UpdateStatus () {
-    echo curl -d "{\"state\": \"$2\"}" -H "Authorization: token $TOKEN" -H "Content-Type: application/json" -X POST $API_ENDPOINT/repos/$REPO_OWNER/$REPO_NAME/statuses/$1
+    curl -d "{\"state\": \"$2\"}" -H "Authorization: token $TOKEN" -H "Content-Type: application/json" -X POST $API_ENDPOINT/repos/$REPO_OWNER/$REPO_NAME/statuses/$1
 }
 
 # Resolve current & script path
