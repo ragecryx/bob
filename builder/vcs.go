@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"os"
 	"path"
 	"path/filepath"
 
@@ -36,8 +35,8 @@ func Clone(recipe *common.Recipe) (string, error) {
 		refBranch := fmt.Sprintf("refs/heads/%s", recipe.Repository.Branch)
 
 		_, err := git.PlainClone(finalDir, false, &git.CloneOptions{
-			URL:           recipe.Repository.URL,
-			Progress:      os.Stdout,
+			URL: recipe.Repository.URL,
+			// Progress:      os.Stdout,
 			ReferenceName: plumbing.ReferenceName(refBranch),
 			SingleBranch:  true,
 		})

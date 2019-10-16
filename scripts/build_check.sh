@@ -27,7 +27,7 @@ export BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
 UpdateStatus $BUILD_COMMIT pending
 
-make build-linux
+make
 test_result=$?
 
 if [ $test_result -ne 0 ]; then
