@@ -7,7 +7,7 @@ REPO_NAME=bob
 TOKEN=$GITHUB_STATUS_TOKEN
 
 UpdateStatus () {
-    curl -d '{"state": '$2'}' -H "Authorization: token "$TOKEN -H "Content-Type: application/json" -X POST $API_ENDPOINT/repos/$REPO_OWNER/$REPO_NAME/statuses/$1
+    echo curl -d "{\"state\": \"$2\"}" -H "Authorization: token $TOKEN" -H "Content-Type: application/json" -X POST $API_ENDPOINT/repos/$REPO_OWNER/$REPO_NAME/statuses/$1
 }
 
 # Resolve current & script path
@@ -31,8 +31,8 @@ make build-linux
 test_result=$?
 
 if [ $test_result -ne 0 ]; then
-    UpdateStatus $BUILD_COMMIT "failure"
+    UpdateStatus $BUILD_COMMIT failure
     exit 1
 else
-    UpdateStatus $BUILD_COMMIT "success"
+    UpdateStatus $BUILD_COMMIT success
 fi

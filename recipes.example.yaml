@@ -8,7 +8,7 @@ bob-dev:
     branch: dev
     url: "https://github.com/ragecryx/bob.git"
     vcs: git
-  command: "make"
+  command: "scripts/build_check.sh"
 
 wayfarer-dev:
   repository:
