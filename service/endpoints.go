@@ -12,18 +12,27 @@ import (
 	common "github.com/ragecryx/bob/common"
 )
 
-func uiMain(w http.ResponseWriter, r *http.Request) {
-	tpl, err := ace.Load("web/base", "web/admin", nil)
+// Context contains all the values needed by
+// a page to be rendered.
+type Context map[string]interface{}
+
+func render(w http.ResponseWriter, page string, ctx Context) {
+	tpl, err := ace.Load("web/base", fmt.Sprintf("web/%s", page), nil)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	if err := tpl.Execute(w, map[string]string{"Msg": "Hello Ace"}); err != nil {
+	if err := tpl.Execute(w, ctx); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+}
+
+func uiMain(w http.ResponseWriter, r *http.Request) {
+	// common.GetRecipes().All
+	render(w, "listing", Context{"recipes": []string{"foo", "bar"}})
 }
 
 func runRecipe(w http.ResponseWriter, r *http.Request) {
