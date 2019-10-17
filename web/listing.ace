@@ -3,15 +3,16 @@
     thead
       tr
         th Title
-        th Repo/Branch
+        th Repo / Branch
         th Hook
         th Actions
     tbody
+      {{$url_base := .url_base}}
       {{range .recipes}}
         tr
           td {{.title}}
           td {{.repo}} / {{.branch}}
-          td 
+          td {{$url_base}}/{{.title}}
           td
             button.button-primary Trigger
       {{end}}

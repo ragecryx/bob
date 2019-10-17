@@ -31,6 +31,15 @@ func render(w http.ResponseWriter, page string, ctx Context) {
 }
 
 func uiMain(w http.ResponseWriter, r *http.Request) {
+	host := r.Host
+	xFwProto := r.Header.Get("X-Forwarded-Proto")
+
+	prefix := "http://"
+	if xFwProto == "https" {
+		prefix = "https://"
+	}
+
+	apiPath := common.GetConfig().BasePath
 	recipes := common.GetRecipes().All
 	entries := make([]map[string]string, len(recipes))
 
@@ -43,7 +52,10 @@ func uiMain(w http.ResponseWriter, r *http.Request) {
 		i++
 	}
 
-	render(w, "listing", Context{"recipes": entries})
+	render(w, "listing", Context{
+		"recipes":  entries,
+		"url_base": fmt.Sprintf("%s%s%s", prefix, host, apiPath),
+	})
 }
 
 func runRecipe(w http.ResponseWriter, r *http.Request) {
