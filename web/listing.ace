@@ -9,9 +9,9 @@
     tbody
       {{range .recipes}}
         tr
-          td {{.}}
-          td
-          td
+          td {{.title}}
+          td {{.repo}} / {{.branch}}
+          td 
           td
             button.button-primary Trigger
       {{end}}

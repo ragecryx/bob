@@ -31,8 +31,19 @@ func render(w http.ResponseWriter, page string, ctx Context) {
 }
 
 func uiMain(w http.ResponseWriter, r *http.Request) {
-	// common.GetRecipes().All
-	render(w, "listing", Context{"recipes": []string{"foo", "bar"}})
+	recipes := common.GetRecipes().All
+	entries := make([]map[string]string, len(recipes))
+
+	i := 0
+	for k, v := range recipes {
+		entries[i] = make(map[string]string)
+		entries[i]["title"] = k
+		entries[i]["repo"] = v.Repository.Name
+		entries[i]["branch"] = v.Repository.Branch
+		i++
+	}
+
+	render(w, "listing", Context{"recipes": entries})
 }
 
 func runRecipe(w http.ResponseWriter, r *http.Request) {
