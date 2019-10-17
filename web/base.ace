@@ -3,10 +3,30 @@ html lang=en
   head
     meta charset=utf-8
     title Bob
+    link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css integrity=sha256-2YQRJMXD7pIAPHiXr0s+vlRWA7GYJEK0ARns7k2sbHY= crossorigin=anonymous
     = css
       h1, h2, h3 {
         color: gray
       }
-    body
-      h2 Builder
-      = yield content
+
+      .x-dot-bg {
+        background:
+          linear-gradient(135deg, #708090 21px, #d9ecff 22px, #d9ecff 24px, transparent 24px, transparent 67px, #d9ecff 67px, #d9ecff 69px, transparent 69px),
+          linear-gradient(225deg, #708090 21px, #d9ecff 22px, #d9ecff 24px, transparent 24px, transparent 67px, #d9ecff 67px, #d9ecff 69px, transparent 69px)0 64px;
+        background-color:#708090;
+        background-size: 64px 128px;
+      }
+
+      .section {
+        background-color: white;
+        margin-top: 5rem;
+        padding: 2rem;
+        border: none;
+        border-radius: 6px;
+      }
+    body.x-dot-bg
+      .container.section
+        .row
+          h2 Available Recipes
+        .row
+          = yield content

@@ -1,0 +1,17 @@
+= content content
+  table.u-full-width
+    thead
+      tr
+        th Title
+        th Repo/Branch
+        th Hook
+        th Actions
+    tbody
+      {{range .recipes}}
+        tr
+          td {{.}}
+          td
+          td
+          td
+            button.button-primary Trigger
+      {{end}}
