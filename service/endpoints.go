@@ -12,21 +12,53 @@ import (
 	common "github.com/ragecryx/bob/common"
 )
 
-func uiMain(w http.ResponseWriter, r *http.Request) {
-	tpl, err := ace.Load("web/base", "web/admin", nil)
+// Context contains all the values needed by
+// a page to be rendered.
+type Context map[string]interface{}
+
+func render(w http.ResponseWriter, page string, ctx Context) {
+	tpl, err := ace.Load("web/base", fmt.Sprintf("web/%s", page), nil)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	if err := tpl.Execute(w, map[string]string{"Msg": "Hello Ace"}); err != nil {
+	if err := tpl.Execute(w, ctx); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 }
 
-func runRecipe(w http.ResponseWriter, r *http.Request) {
+func handlePanel(w http.ResponseWriter, r *http.Request) {
+	host := r.Host
+	xFwProto := r.Header.Get("X-Forwarded-Proto")
+
+	prefix := "http://"
+	if xFwProto == "https" {
+		prefix = "https://"
+	}
+
+	apiPath := common.GetConfig().BasePath
+	recipes := common.GetRecipes().All
+	entries := make([]map[string]string, len(recipes))
+
+	i := 0
+	for k, v := range recipes {
+		entries[i] = make(map[string]string)
+		entries[i]["title"] = k
+		entries[i]["repo"] = v.Repository.Name
+		entries[i]["branch"] = v.Repository.Branch
+		i++
+	}
+
+	render(w, "listing", Context{
+		"recipes":  entries,
+		"url_base": fmt.Sprintf("%s%s%s", prefix, host, apiPath),
+	})
+}
+
+func handleRecipe(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	recipeName := vars["recipe_name"]
 
@@ -34,16 +66,19 @@ func runRecipe(w http.ResponseWriter, r *http.Request) {
 		// Parse Github payload
 		body, bodyErr := ioutil.ReadAll(r.Body)
 		if bodyErr != nil {
-			fmt.Fprintf(w, "Failed to parse body. Error: %s", bodyErr)
+			WriteError(w, http.StatusBadRequest, fmt.Sprintf("Failed to parse body. Error: %s", bodyErr))
 			return
 		}
 
-		if builder.IsGithubMerge(val, body) {
-			fmt.Fprintf(w, "Will build %s", val)
+		if builder.IsManualTrigger(val, body) {
+			WriteBuildQueued(w, "Added by manual trigger")
+			builder.Enqueue(val)
+		} else if builder.IsGithubMerge(val, body) {
+			WriteBuildQueued(w, "Added by Github merge event")
 			builder.Enqueue(val)
 		}
 	} else {
-		fmt.Fprintf(w, "Recipe not found!")
+		WriteError(w, http.StatusNotFound, fmt.Sprintf("Recipe '%s' does not exist", recipeName))
 	}
 }
 
@@ -53,8 +88,8 @@ func runRecipe(w http.ResponseWriter, r *http.Request) {
 func SetupEndpoints() {
 	router := mux.NewRouter()
 
-	router.HandleFunc("/", uiMain)
-	router.HandleFunc(common.GetConfig().BasePath+"/{recipe_name}", runRecipe)
+	router.HandleFunc("/", handlePanel)
+	router.HandleFunc(common.GetConfig().BasePath+"/{recipe_name}", handleRecipe)
 
 	http.Handle("/", router)
 }

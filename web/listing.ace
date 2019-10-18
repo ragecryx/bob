@@ -1,0 +1,31 @@
+= content js_extra
+  = javascript
+    function force_build(url) {
+      fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({
+          who: "Bob",
+          force_build: true
+        }),
+        headers: {'Content-Type': 'application/json'}
+      });
+    }
+
+= content content
+  table.u-full-width
+    thead
+      tr
+        th Title
+        th Repo / Branch
+        th Hook
+        th Actions
+    tbody
+      {{$url_base := .url_base}}
+      {{range .recipes}}
+        tr
+          td {{.title}}
+          td {{.repo}} / {{.branch}}
+          td {{$url_base}}/{{.title}}
+          td
+            button.button-primary onClick="force_build('{{HTML $url_base}}/{{HTML .title}}')" Trigger
+      {{end}}
