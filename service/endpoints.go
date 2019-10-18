@@ -66,19 +66,19 @@ func runRecipe(w http.ResponseWriter, r *http.Request) {
 		// Parse Github payload
 		body, bodyErr := ioutil.ReadAll(r.Body)
 		if bodyErr != nil {
-			fmt.Fprintf(w, "Failed to parse body. Error: %s", bodyErr)
+			WriteError(w, http.StatusBadRequest, fmt.Sprintf("Failed to parse body. Error: %s", bodyErr))
 			return
 		}
 
 		if builder.IsManualTrigger(val, body) {
-			fmt.Fprintf(w, "Will force build %s", val)
+			WriteBuildQueued(w, "Added by manual trigger")
 			builder.Enqueue(val)
 		} else if builder.IsGithubMerge(val, body) {
-			fmt.Fprintf(w, "Will build %s", val)
+			WriteBuildQueued(w, "Added by Github merge event")
 			builder.Enqueue(val)
 		}
 	} else {
-		fmt.Fprintf(w, "Recipe not found!")
+		WriteError(w, http.StatusNotFound, fmt.Sprintf("Recipe '%s' does not exist", recipeName))
 	}
 }
 
