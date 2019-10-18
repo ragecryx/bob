@@ -3,7 +3,6 @@ package common
 import (
 	"flag"
 	"io/ioutil"
-	"log"
 
 	"gopkg.in/yaml.v2"
 )
@@ -34,20 +33,19 @@ func LoadConfig() *Config {
 	var config Config
 	var confErr error
 
-	log.Printf("* Loading %s", *configFile)
+	commonLog.Infof("Loading %s", *configFile)
 	data, fileErr := ioutil.ReadFile(*configFile)
 
 	if fileErr != nil {
-		log.Printf("! Error: %s\n", fileErr)
-
-		log.Printf("* Falling back to server defaults...\n")
+		commonLog.Errorf("%s", fileErr)
+		commonLog.Infof("Falling back to server defaults")
 		confErr = yaml.Unmarshal([]byte(DefaultConfig), &config)
 	} else {
 		confErr = yaml.Unmarshal(data, &config)
 	}
 
 	if confErr != nil {
-		log.Panicf("Cannot unmarshal config data! Error: %s\n", confErr)
+		commonLog.Panicf("Cannot unmarshal config data! Error: %s", confErr)
 	}
 
 	currentConfig = config

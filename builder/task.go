@@ -2,7 +2,6 @@ package builder
 
 import (
 	"container/list"
-	"log"
 	"os"
 	"os/exec"
 	"strings"
@@ -22,7 +21,7 @@ var (
 // ConfigureTasks prepares the builder
 // to be ready for picking up work
 func ConfigureTasks(amount int) {
-	log.Printf("* Initializing %d tasks", amount)
+	common.BuilderLog.Infof("* Initializing %d tasks", amount)
 
 	taskAvailability = make([]bool, amount)
 	taskChannels = make([]chan common.Recipe, amount)
@@ -51,14 +50,14 @@ func RunTask(index int) {
 		title := recipe.Repository.Name
 
 		// Clone
-		log.Printf("[T#%d] Building '%s'", index, title)
+		common.BuilderLog.Infof("[T#%d] Building '%s'", index, title)
 		cloneDir, err := Clone(&recipe)
 
 		if err != nil && config.CleanupBuilds {
 			errCleanup := os.Remove(cloneDir)
 
 			if errCleanup != nil {
-				log.Panicf("! Could not cleanup %s after failed cloning", cloneDir)
+				common.BuilderLog.Panicf("! Could not cleanup %s after failed cloning", cloneDir)
 			}
 		}
 
@@ -70,16 +69,16 @@ func RunTask(index int) {
 		result, errCmd := cmd.Output()
 
 		if errCmd != nil && config.CleanupBuilds {
-			log.Printf("[T#%d] ! Error running build cmd: %s", index, recipe.Command)
-			log.Printf(" > ! Error: %s", errCmd.Error())
+			common.BuilderLog.Errorf("[T#%d] ! Error running build cmd: %s", index, recipe.Command)
+			common.BuilderLog.Errorf(" > ! Error: %s", errCmd.Error())
 			errCleanup := os.Remove(cloneDir)
 
 			if errCleanup != nil {
-				log.Panicf("! Could not cleanup %s after failed building", cloneDir)
+				common.BuilderLog.Panicf("! Could not cleanup %s after failed building", cloneDir)
 			}
 		}
 
-		log.Printf("[T#%d] Finished '%s' with output:\n > %s", index, title, string(result))
+		common.BuilderLog.Infof("[T#%d] Finished '%s' with output:\n > %s", index, title, string(result))
 
 		taskAvailability[index] = true
 	}

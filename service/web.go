@@ -2,6 +2,7 @@ package service
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -14,6 +15,9 @@ import (
 // and initializes the http server
 func StartServer() {
 	flag.Parse()
+	fmt.Printf("«It's better to do one job well than two jobs... not so well.»\n - Bob\n\n")
+
+	common.InitLogging()
 
 	config := common.LoadConfig()
 	common.LoadRecipes()
@@ -22,7 +26,7 @@ func StartServer() {
 	builder.ConfigureTasks(config.TaskQueueSize)
 
 	port := ":" + strconv.Itoa(common.GetConfig().Port)
-	log.Printf("* Listening on %s\n", port)
+	common.ServiceLog.Warnf("Listening on %s\n", port)
 	serveErr := http.ListenAndServe(port, nil)
 
 	if serveErr != nil {

@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 	"path"
 	"path/filepath"
 
@@ -33,7 +32,7 @@ func Clone(recipe *common.Recipe) (string, error) {
 		}
 	}
 
-	log.Printf("* Checking out %s in %s", title, finalDir)
+	common.BuilderLog.Infof("* Checking out %s in %s", title, finalDir)
 
 	if recipe.Repository.VCS == "git" {
 		// Clone
@@ -47,7 +46,7 @@ func Clone(recipe *common.Recipe) (string, error) {
 		})
 
 		if err != nil {
-			log.Panicf("! Error checking out Git repo %s: %s", title, err)
+			common.BuilderLog.Panicf("! Error checking out Git repo %s: %s", title, err)
 		}
 
 		return finalDir, nil
@@ -62,7 +61,7 @@ func IsManualTrigger(r common.Recipe, payload []byte) bool {
 	var data map[string]interface{}
 
 	if earlyParseErr := json.Unmarshal(payload, &data); earlyParseErr != nil {
-		log.Printf("! Error parsing json: %s", earlyParseErr)
+		common.BuilderLog.Errorf("! Error parsing json: %s", earlyParseErr)
 		return false
 	}
 
@@ -88,7 +87,7 @@ func IsGithubMerge(r common.Recipe, payload []byte) bool {
 
 	var data map[string]interface{}
 	if earlyParseErr := json.Unmarshal(payload, &data); earlyParseErr != nil {
-		log.Printf("! Error parsing json: %s", earlyParseErr)
+		common.BuilderLog.Errorf("! Error parsing json: %s", earlyParseErr)
 		return false
 	}
 
