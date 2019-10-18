@@ -30,7 +30,7 @@ func render(w http.ResponseWriter, page string, ctx Context) {
 	}
 }
 
-func uiMain(w http.ResponseWriter, r *http.Request) {
+func handlePanel(w http.ResponseWriter, r *http.Request) {
 	host := r.Host
 	xFwProto := r.Header.Get("X-Forwarded-Proto")
 
@@ -58,7 +58,7 @@ func uiMain(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func runRecipe(w http.ResponseWriter, r *http.Request) {
+func handleRecipe(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	recipeName := vars["recipe_name"]
 
@@ -88,8 +88,8 @@ func runRecipe(w http.ResponseWriter, r *http.Request) {
 func SetupEndpoints() {
 	router := mux.NewRouter()
 
-	router.HandleFunc("/", uiMain)
-	router.HandleFunc(common.GetConfig().BasePath+"/{recipe_name}", runRecipe)
+	router.HandleFunc("/", handlePanel)
+	router.HandleFunc(common.GetConfig().BasePath+"/{recipe_name}", handleRecipe)
 
 	http.Handle("/", router)
 }
