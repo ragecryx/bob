@@ -22,11 +22,12 @@ run:
 		$(GOBUILD) -o $(BINARY_NAME) -v ./...
 		./$(BINARY_NAME)
 deps:
+		$(GOGET) github.com/stretchr/testify/assert
+		$(GOGET) github.com/sirupsen/logrus
 		$(GOGET) gopkg.in/yaml.v2
 		$(GOGET) gopkg.in/src-d/go-git.v4
 		$(GOGET) github.com/gorilla/mux
 		$(GOGET) github.com/yosssi/ace
-		$(GOGET) github.com/stretchr/testify/assert
 
 
 # Cross compilation
