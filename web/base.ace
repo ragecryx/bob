@@ -24,6 +24,8 @@ html lang=en
         border: none;
         border-radius: 6px;
       }
+    = yield css_extra
+    = yield js_extra
     body.x-dot-bg
       .container.section
         .row

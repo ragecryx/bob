@@ -70,7 +70,10 @@ func runRecipe(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		if builder.IsGithubMerge(val, body) {
+		if builder.IsManualTrigger(val, body) {
+			fmt.Fprintf(w, "Will force build %s", val)
+			builder.Enqueue(val)
+		} else if builder.IsGithubMerge(val, body) {
 			fmt.Fprintf(w, "Will build %s", val)
 			builder.Enqueue(val)
 		}

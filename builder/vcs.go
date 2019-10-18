@@ -56,6 +56,29 @@ func Clone(recipe *common.Recipe) (string, error) {
 	return finalDir, errors.New("Unsupported VCS")
 }
 
+// IsManualTrigger detects a dummy payload that forces
+// build of the recipe.
+func IsManualTrigger(r common.Recipe, payload []byte) bool {
+	var data map[string]interface{}
+
+	if earlyParseErr := json.Unmarshal(payload, &data); earlyParseErr != nil {
+		log.Printf("! Error parsing json: %s", earlyParseErr)
+		return false
+	}
+
+	trigger := ManualTrigger{}
+
+	if parseErr := json.Unmarshal(payload, &trigger); parseErr != nil {
+		return false
+	}
+
+	if trigger.Who == "Bob" && trigger.ForceBuild == true {
+		return true
+	}
+
+	return false
+}
+
 // IsGithubMerge checks whether the provided Recipe
 // matches the Github payload of the hook request.
 func IsGithubMerge(r common.Recipe, payload []byte) bool {
@@ -76,7 +99,6 @@ func IsGithubMerge(r common.Recipe, payload []byte) bool {
 	event := GHPushEvent{}
 
 	if parseErr := json.Unmarshal(payload, &event); parseErr != nil {
-		log.Printf("! Error parsing GitHub PushEvent: %s", parseErr)
 		return false
 	}
 
