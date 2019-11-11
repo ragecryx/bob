@@ -58,6 +58,9 @@ func RunTask(index int) {
 
 			if errCleanup != nil {
 				common.BuilderLog.Errorf("! Could not cleanup %s after failed cloning", cloneDir)
+				// Free the task and continue
+				taskAvailability[index] = true
+				continue
 			}
 		}
 
@@ -75,11 +78,13 @@ func RunTask(index int) {
 
 			if errCleanup != nil {
 				common.BuilderLog.Errorf("! Could not cleanup %s after failed building", cloneDir)
+				// Free the task and continue
+				taskAvailability[index] = true
+				continue
 			}
 		}
 
 		common.BuilderLog.Infof("[T#%d] Finished '%s' with output:\n > %s", index, title, string(result))
-
 		taskAvailability[index] = true
 	}
 }
