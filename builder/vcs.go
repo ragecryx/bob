@@ -46,7 +46,8 @@ func Clone(recipe *common.Recipe) (string, error) {
 		})
 
 		if err != nil {
-			common.BuilderLog.Panicf("! Error checking out Git repo %s: %s", title, err)
+			common.BuilderLog.Errorf("! Error checking out Git repo %s: %s", title, err)
+			return finalDir, err
 		}
 
 		return finalDir, nil

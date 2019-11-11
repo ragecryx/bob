@@ -57,7 +57,7 @@ func RunTask(index int) {
 			errCleanup := os.Remove(cloneDir)
 
 			if errCleanup != nil {
-				common.BuilderLog.Panicf("! Could not cleanup %s after failed cloning", cloneDir)
+				common.BuilderLog.Errorf("! Could not cleanup %s after failed cloning", cloneDir)
 			}
 		}
 
@@ -74,7 +74,7 @@ func RunTask(index int) {
 			errCleanup := os.Remove(cloneDir)
 
 			if errCleanup != nil {
-				common.BuilderLog.Panicf("! Could not cleanup %s after failed building", cloneDir)
+				common.BuilderLog.Errorf("! Could not cleanup %s after failed building", cloneDir)
 			}
 		}
 
