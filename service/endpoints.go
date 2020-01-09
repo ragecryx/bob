@@ -76,6 +76,9 @@ func handleRecipe(w http.ResponseWriter, r *http.Request) {
 		} else if builder.IsGithubMerge(val, body) {
 			WriteBuildQueued(w, "Added by Github merge event")
 			builder.Enqueue(val)
+		} else if builder.IsBitBucketMerge(val, body) {
+			WriteBuildQueued(w, "Added by BitBucket merge event")
+			builder.Enqueue(val)
 		}
 	} else {
 		WriteError(w, http.StatusNotFound, fmt.Sprintf("Recipe '%s' does not exist", recipeName))

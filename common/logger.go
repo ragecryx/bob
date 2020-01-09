@@ -22,7 +22,7 @@ func InitLogging() {
 	log.SetOutput(os.Stdout)
 
 	// Only log the warning severity or above.
-	log.SetLevel(log.WarnLevel)
+	log.SetLevel(log.InfoLevel)
 
 	commonLog = log.WithField("system", "common")
 	BuilderLog = log.WithField("system", "builder")

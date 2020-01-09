@@ -25,7 +25,13 @@ type Repository struct {
 	Name   string `yaml:"name"`
 	Branch string `yaml:"branch"`
 	URL    string `yaml:"url"`
-	VCS    string `yaml:"vcs"`
+	SSH    *struct {
+		KeyFile string `yaml:"keyfile"`
+		// The environment variable that contains
+		// the password
+		PasswdEnv *string `yaml:"passenv"`
+	} `yaml:"ssh"`
+	VCS string `yaml:"vcs"`
 }
 
 // Recipe has a repo that is used to checkout the

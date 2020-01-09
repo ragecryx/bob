@@ -17,3 +17,13 @@ wayfarer-dev:
     url: "https://github.com/dimgrav/wayfarer.git"
     vcs: git
   command: "npm install"
+
+bob-test-repo:
+  repository:
+    name: BobTestRepo
+    branch: master
+    url: "git@bitbucket.org:ragecryx/bobtestrepo.git"
+    ssh:
+      keyfile: "/home/ragecryx/.ssh/bobtest"
+    vcs: git
+  command: "bin/start.sh"
